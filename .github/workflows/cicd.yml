@@ -1,0 +1,60 @@
+name: Build and Deploy Prescription Service
+
+on:
+  push:
+    branches: [ "dev", "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/medibridge-prescription-service
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.DOCKER_IMAGE }}:latest
+            ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
+            ${{ env.DOCKER_IMAGE }}:${{ github.ref_name }}
+
+      - name: Run Docker container with env variables
+        run: |
+          docker run -d \
+            --name medibridge-prescription-service \
+            -p 8083:8083 \
+            -e SPRING_PROFILES_ACTIVE="${{ secrets.SPRING_PROFILE }}" \
+            -e DB_URL="${{ secrets.DB_URL }}" \
+            -e DB_USERNAME="${{ secrets.DB_USERNAME }}" \
+            -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+            -e EUREKA_URL="${{ secrets.EUREKA_URL }}" \
+            -e PDF_OUTPUT_PATH="${{ secrets.PDF_OUTPUT_PATH }}" \
+            -e PDF_FONT_PATH="${{ secrets.PDF_FONT_PATH }}" \
+            -e SERVER_PORT="8083" \
+            --restart unless-stopped \
+            ${{ env.DOCKER_IMAGE }}:latest

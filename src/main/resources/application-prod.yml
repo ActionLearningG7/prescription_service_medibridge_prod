@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://prod-db-server:3306/medibridge_prescription_prod?useSSL=true&serverTimezone=UTC&createDatabaseIfNotExist=true}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+pdf:
+  output-path: ${PDF_OUTPUT_PATH:/var/medibridge/prescriptions}
+  font-path: ${PDF_FONT_PATH:/usr/share/fonts}
+
+logging:
+  level:
+    root: WARN
+    com.medibridge: INFO
+  file:
+    name: /var/log/medibridge/prescription-service.log
