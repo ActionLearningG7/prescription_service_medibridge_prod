@@ -113,6 +113,14 @@ public class PrescriptionService {
         return prescriptionRepository.findByDoctorId(doctorId, pageable);
     }
 
+    @Transactional(readOnly = true)
+    public Page<Prescription> getAllPrescriptions(PrescriptionStatus status, Pageable pageable) {
+        if (status != null) {
+            return prescriptionRepository.findByStatus(status, pageable);
+        }
+        return prescriptionRepository.findAll(pageable);
+    }
+
     @Transactional
     public Prescription updatePrescription(String id, PrescriptionRequest request) {
         Prescription prescription = getPrescription(id);

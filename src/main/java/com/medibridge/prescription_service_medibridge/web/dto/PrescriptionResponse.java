@@ -3,6 +3,7 @@ package com.medibridge.prescription_service_medibridge.web.dto;
 import com.medibridge.prescription_service_medibridge.domain.enums.PrescriptionStatus;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class PrescriptionResponse {
     private String diagnosisSummary;
     private String notesToPatient;
     private String notesToPharmacist;
-    private LocalDateTime followUpDate;
+    private LocalDate followUpDate;
     private List<PrescriptionMedicationDto> medications;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

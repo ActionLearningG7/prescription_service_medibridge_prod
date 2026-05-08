@@ -49,3 +49,9 @@ logging:
     com.medibridge: INFO
   file:
     name: /var/log/medibridge/prescription-service.log
+eureka:
+  client:
+    service-url:
+      defaultZone: https://servermedibridgeprod-production.up.railway.app/eureka/
+    register-with-eureka: true
+    fetch-registry: true

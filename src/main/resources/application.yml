@@ -1,6 +1,8 @@
 spring:
   application:
     name: prescription-service
+  profiles:
+    active: dev
   
   datasource:
     url: jdbc:mysql://mysql.railway.internal:3306/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
@@ -41,12 +43,6 @@ spring:
 server:
   port: 8084
 
-eureka:
-  client:
-    service-url:
-      defaultZone: https://servermedibridgeprod-production.up.railway.app/eureka/
-    register-with-eureka: true
-    fetch-registry: true
 
 management:
   endpoints:

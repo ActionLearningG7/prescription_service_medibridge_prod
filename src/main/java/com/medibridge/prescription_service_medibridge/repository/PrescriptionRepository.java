@@ -21,5 +21,8 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, UUID
     Page<Prescription> findByDoctorIdAndStatus(String doctorId,
             com.medibridge.prescription_service_medibridge.domain.enums.PrescriptionStatus status, Pageable pageable);
 
+    Page<Prescription> findByStatus(
+            com.medibridge.prescription_service_medibridge.domain.enums.PrescriptionStatus status, Pageable pageable);
+
     boolean existsByAppointmentId(String appointmentId);
 }
